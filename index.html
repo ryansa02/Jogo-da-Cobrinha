@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="pt-Br">
+<html lang="pt-BR">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -7,40 +7,38 @@
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
+    <!-- Tela de Menu -->
     <div id="menu" class="screen">
       <h1>Jogo da Cobrinha</h1>
-      <button onclick="startGame()">Iniciar Jogo</button>
-      <button onclick="toggleTheme()">Alternar Tema</button>
+      <button onclick="startGame()">Jogar</button>
+      <div class="color-selector">
+        <label>Cor da Cobra:</label>
+        <input type="color" id="snakeColor" value="#00ff00" />
+
+        <label>Cor da Comida:</label>
+        <input type="color" id="foodColor" value="#ff0000" />
+      </div>
+
+      <p id="highscoreMenu">Recorde: 0</p>
     </div>
 
-    <div id="gameArea" class="container hidden">
-      <div class="menu">
+    <!-- Tela do Jogo -->
+    <div id="gameArea" class="screen hidden">
+      <div class="hud">
         <p id="score">Pontuação: 0</p>
-        <p id="highscore">Recorde: 0</p>
+        <p id="highscoreGame">Recorde: 0</p>
       </div>
       <canvas id="game" width="400" height="400"></canvas>
-
-
-    <div id="gameOver" class="screen hidden">
-      <h2>Fim de jogo!</h2>
-      <p id="finalScore"></p>
-      <button onclick="startGame()">Jogar Novamente</button>
-      <button onclick="showMenu()"></button> Menu</button>
     </div>
 
-    <audio
-      id="eatSound"
-      src="https://www.fesliyanstudios.com/play-mp3/387"
-    ></audio>
-    <audio
-      id="gameOverSound"
-      src="https://www.fesliyanstudios.com/play-mp3/6676"
-    ></audio>
-    <audio
-      id="bgMusic"
-      src="https://www.fesliyanstudios.com/play-mp3/6826"
-      loop
-    ></audio>
+    <!-- Tela de Game Over -->
+    <div id="gameOver" class="screen hidden">
+      <h1>Você perdeu</h1>
+      <p id="finalScore">Sua pontuação: 0</p>
+      <p id="recordScore">Recorde: 0</p>
+      <button onclick="startGame()">Jogar Novamente</button>
+      <button onclick="showMenu()">Menu</button>
+    </div>
 
     <script src="script.js"></script>
   </body>
