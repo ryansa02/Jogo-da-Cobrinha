@@ -1,28 +1,42 @@
 const canvas = document.getElementById('game')
 const ctx = canvas.getContext('2d')
 const box = 20
-const canvasSize = 20 // 20x20 blocos
+const canvasSize = 20
+
+const menu = document.getElementById('menu')
+const gameArea = document.getElementById('gameArea')
+const gameOverScreen = document.getElementById('gameOver')
+const finalScore = document.getElementById('finalScore')
+
+const eatSound = document.getElementById('eatSound')
+const gameOverSound = document.getElementById('gameOverSound')
+const bgMusic = document.getElementById('bgMusic')
+
 let snake
 let food
 let direction
 let score
+let highScore = localStorage.getItem('highScore') || 0
+let gameLoop
 
-function startGame() {
-  snake = [{ x: 10, y: 10 }]
-  direction = 'RIGHT'
-  food = spawnFood()
-  score = 0
-  document.getElementById('score').textContent = `Pontuação: ${score}`
+document.getElementById('highscore').textContent = `Recorde: ${highScore}`
 
-  if (typeof gameLoop !== 'undefined') clearInterval(gameLoop)
-  gameLoop = setInterval(draw, 150)
+function toggleTheme() {
+  document.body.classList.toggle('light')
 }
 
-function spawnFood() {
-  return {
-    x: Math.floor(Math.random() * canvasSize),
-    y: Math.floor(Math.random() * canvasSize),
-  }
+function showMenu() {
+  gameArea.classList.add('hidden')
+  gameOverScreen.classList.add('hidden')
+  menu.classList.remove('hidden')
+  bgMusic.pause()
+}
+
+function setDirection(dir) {
+  if (dir === 'UP' && direction !== 'DOWN') direction = 'UP'
+  if (dir === 'DOWN' && direction !== 'UP') direction = 'DOWN'
+  if (dir === 'LEFT' && direction !== 'RIGHT') direction = 'LEFT'
+  if (dir === 'RIGHT' && direction !== 'LEFT') direction = 'RIGHT'
 }
 
 document.addEventListener('keydown', (e) => {
@@ -32,28 +46,58 @@ document.addEventListener('keydown', (e) => {
   if (e.key === 'ArrowRight' && direction !== 'LEFT') direction = 'RIGHT'
 })
 
+function startGame() {
+  menu.classList.add('hidden')
+  gameOverScreen.classList.add('hidden')
+  gameArea.classList.remove('hidden')
+
+  snake = [{ x: 10, y: 10 }]
+  direction = 'RIGHT'
+  food = spawnFood()
+  score = 0
+  updateScore()
+
+  clearInterval(gameLoop)
+  gameLoop = setInterval(draw, 150)
+
+  bgMusic.currentTime = 0
+  bgMusic.play()
+}
+
+function spawnFood() {
+  return {
+    x: Math.floor(Math.random() * canvasSize),
+    y: Math.floor(Math.random() * canvasSize),
+  }
+}
+
+function updateScore() {
+  document.getElementById('score').textContent = `Pontuação: ${score}`
+  document.getElementById('highscore').textContent = `Recorde: ${highScore}`
+}
+
 function draw() {
   ctx.fillStyle = '#222'
   ctx.fillRect(0, 0, canvas.width, canvas.height)
 
-  // Desenha a cobra
-  for (let part of snake) {
-    ctx.fillStyle = '#FFFFFF'
+  snake.forEach((part) => {
+    ctx.fillStyle = getComputedStyle(document.body).getPropertyValue(
+      '--snake-color'
+    )
     ctx.fillRect(part.x * box, part.y * box, box - 1, box - 1)
-  }
+  })
 
-  // Desenha a comida
-  ctx.fillStyle = 'red'
+  ctx.fillStyle = getComputedStyle(document.body).getPropertyValue(
+    '--food-color'
+  )
   ctx.fillRect(food.x * box, food.y * box, box - 1, box - 1)
 
-  // Move a cobra
-  let head = { ...snake[0] }
+  const head = { ...snake[0] }
   if (direction === 'UP') head.y -= 1
   if (direction === 'DOWN') head.y += 1
   if (direction === 'LEFT') head.x -= 1
   if (direction === 'RIGHT') head.x += 1
 
-  // Verifica colisões
   if (
     head.x < 0 ||
     head.x >= canvasSize ||
@@ -61,19 +105,34 @@ function draw() {
     head.y >= canvasSize ||
     snake.some((segment) => segment.x === head.x && segment.y === head.y)
   ) {
-    clearInterval(gameLoop)
-    alert('💀 Fim de jogo! Sua pontuação foi: ' + score)
+    gameOver()
     return
   }
 
   snake.unshift(head)
 
-  // Verifica se comeu a comida
   if (head.x === food.x && head.y === food.y) {
+    eatSound.play()
     score += 1
-    document.getElementById('score').textContent = `Pontuação: ${score}`
+    updateScore()
     food = spawnFood()
   } else {
     snake.pop()
   }
+}
+
+function gameOver() {
+  clearInterval(gameLoop)
+  gameOverSound.play()
+  bgMusic.pause()
+
+  if (score > highScore) {
+    highScore = score
+    localStorage.setItem('highScore', highScore)
+  }
+
+  finalScore.textContent = `Sua pontuação: ${score}`
+  gameArea.classList.add('hidden')
+  gameOverScreen.classList.remove('hidden')
+  updateScore()
 }

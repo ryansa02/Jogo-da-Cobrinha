@@ -25,7 +25,8 @@ body {
   padding: 20px;
 }
 
-h1 {
+h1,
+h2 {
   margin-bottom: 10px;
 }
 
@@ -52,10 +53,12 @@ button {
   padding: 10px 20px;
   border-radius: 8px;
   cursor: pointer;
+  transition: 0.2s;
 }
 
 button:hover {
   background-color: var(--btn-hover);
+  transform: scale(1.05);
 }
 
 #score,
@@ -72,4 +75,17 @@ button:hover {
   width: 60px;
   height: 60px;
   font-size: 24px;
+}
+
+/* Telas de menu e game over */
+.screen {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 90vh;
+}
+
+.hidden {
+  display: none;
 }

@@ -1,16 +1,54 @@
 <!DOCTYPE html>
-<html lang="pt-Br">
+<html lang="pt-br">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Jogo da Cobrinha</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>🐍 Jogo da Cobrinha</title>
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
-    <h1>Jogo da Cobrinha</h1>
-    <canvas id="game" width="400" height="400"></canvas>
-    <p id="score">Pontuação: 0</p>
-    <button onclick="startGame()">Iniciar / Reiniciar</button>
+    <div id="menu" class="screen">
+      <h1>🐍 Jogo da Cobrinha</h1>
+      <button onclick="startGame()">🎮 Iniciar Jogo</button>
+      <button onclick="toggleTheme()">🌗 Alternar Tema</button>
+    </div>
+
+    <div id="gameArea" class="container hidden">
+      <div class="menu">
+        <p id="score">Pontuação: 0</p>
+        <p id="highscore">Recorde: 0</p>
+      </div>
+      <canvas id="game" width="400" height="400"></canvas>
+
+      <div class="controls">
+        <button onclick="setDirection('UP')">⬆️</button><br />
+        <button onclick="setDirection('LEFT')">⬅️</button>
+        <button onclick="setDirection('DOWN')">⬇️</button>
+        <button onclick="setDirection('RIGHT')">➡️</button>
+      </div>
+    </div>
+
+    <div id="gameOver" class="screen hidden">
+      <h2>💀 Fim de jogo!</h2>
+      <p id="finalScore"></p>
+      <button onclick="startGame()">🔁 Jogar Novamente</button>
+      <button onclick="showMenu()">🏠 Menu</button>
+    </div>
+
+    <audio
+      id="eatSound"
+      src="https://www.fesliyanstudios.com/play-mp3/387"
+    ></audio>
+    <audio
+      id="gameOverSound"
+      src="https://www.fesliyanstudios.com/play-mp3/6676"
+    ></audio>
+    <audio
+      id="bgMusic"
+      src="https://www.fesliyanstudios.com/play-mp3/6826"
+      loop
+    ></audio>
+
     <script src="script.js"></script>
   </body>
 </html>
